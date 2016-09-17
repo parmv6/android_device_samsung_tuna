@@ -182,6 +182,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Symlinks
 PRODUCT_PACKAGES += \
+	libpn544_fw.so \
 	tuna_hdcp_keys
 
 PRODUCT_CHARACTERISTICS := nosdcard
