@@ -48,6 +48,8 @@ BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_CMDLINE := androidboot.hardware=$(TARGET_BOOTLOADER_BOARD_NAME)
 TARGET_KERNEL_CONFIG := cyanogenmod_tuna_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/tuna
+KERNEL_TOOLCHAIN := $(ANDROID_BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/arm/arm-eabi-4.7/bin
+TARGET_KERNEL_CROSS_COMPILE_PREFIX := arm-eabi-
 
 # Camera
 BOARD_CANT_REALLOCATE_OMX_BUFFERS := true
