@@ -184,10 +184,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
 	tuna_hdcp_keys
 
-# Themes
-PRODUCT_PACKAGES += \
-    HexoLibre
-
 PRODUCT_CHARACTERISTICS := nosdcard
 
 # Filesystem management tools
