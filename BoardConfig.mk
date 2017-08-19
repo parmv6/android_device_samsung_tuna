@@ -110,6 +110,9 @@ BOARD_INVENSENSE_APPLY_COMPASS_NOISE_FILTER := true
 BOARD_SEPOLICY_DIRS += \
 	$(DEVICE_FOLDER)/sepolicy
 
+# Some of our vendor libs have text relocations
+TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
+
 # Recovery
 RECOVERY_FSTAB_VERSION := 2
 TARGET_RECOVERY_FSTAB = $(DEVICE_FOLDER)/rootdir/fstab.tuna
