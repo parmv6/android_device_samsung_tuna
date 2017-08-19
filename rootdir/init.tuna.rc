@@ -49,7 +49,7 @@ on fs
     mkdir /tee 0770 drmrpc drmrpc
 
     mount_all /fstab.tuna
-
+    start tuna_setup
     restorecon /dev/block/platform/omap/omap_hsmmc.0/by-name/radio
     restorecon_recursive /factory
     mount ext4 /dev/block/platform/omap/omap_hsmmc.0/by-name/efs /factory ro remount
@@ -256,6 +256,13 @@ service tee_fs_setup /system/vendor/bin/tee-fs-setup.sh
 on property:init.tee_fs.ready=true
     start smc_pa_wvdrm
     start tf_daemon
+
+service tuna_setup /system/vendor/bin/tunasetup.sh
+    class main
+    user root
+    group root
+    disabled
+    oneshot
 
 # Allow writing to the kernel trace log. Enabling tracing still requires root.
 on property:ro.debuggable=1

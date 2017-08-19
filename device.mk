@@ -24,6 +24,18 @@ DEVICE_FOLDER := device/samsung/tuna
 # Processor
 TARGET_BOARD_OMAP_CPU := 4460
 
+# We have 3 different variants of this device:
+# - maguro (GSM)
+# - toro (CDMA/LTE, VZW)
+# - toroplus (CDMA/LTE, SPR)
+# We need to set some stuff up based on what device we're working with.
+PRODUCT_COPY_FILES += \
+	$(DEVICE_FOLDER)/variants/tunasetup.sh:system/vendor/bin/tunasetup.sh \
+	$(DEVICE_FOLDER)/variants/tee-fs-setup.sh:system/vendor/bin/tee-fs-setup.sh \
+	$(DEVICE_FOLDER)/variants/maguro.prop:system/vendor/maguro/build.prop \
+	$(DEVICE_FOLDER)/variants/toro.prop:system/vendor/toro/build.prop \
+	$(DEVICE_FOLDER)/variants/toroplus.prop:system/vendor/toroplus/build.prop
+
 $(call inherit-product-if-exists, hardware/ti/omap4/omap4.mk)
 
 DEVICE_PACKAGE_OVERLAYS += $(DEVICE_FOLDER)/overlay
@@ -38,6 +50,7 @@ PRODUCT_PACKAGES += \
 	audio.r_submix.default \
 	audio.usb.default \
 	camera.tuna \
+        keystore.tuna \
 	lights.tuna \
 	nfc.tuna \
 	libpn544_fw \
@@ -57,20 +70,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
 	$(DEVICE_FOLDER)/audio/audio_policy.conf:system/etc/audio_policy.conf \
 	$(DEVICE_FOLDER)/audio/audio_effects.conf:system/vendor/etc/audio_effects.conf
-
-PRODUCT_PACKAGES += \
-	tuna_hdcp_keys
-
-# Enable AAC 5.1 output
-PRODUCT_PROPERTY_OVERRIDES += \
-	media.aac_51_output_enabled=true
-
-# SMC
-PRODUCT_PACKAGES += \
-	keystore.tuna
-
- PRODUCT_COPY_FILES += \
-	$(DEVICE_FOLDER)/tee-fs-setup.sh:system/vendor/bin/tee-fs-setup.sh
 
 # Init files
 PRODUCT_COPY_FILES += \
@@ -95,7 +94,9 @@ PRODUCT_COPY_FILES += \
 
 # Wifi
 PRODUCT_COPY_FILES += \
-	$(DEVICE_FOLDER)/bcmdhd.cal:system/etc/wifi/bcmdhd.cal
+	$(DEVICE_FOLDER)/etc/wifi/bcmdhd.maguro.cal:system/etc/wifi/bcmdhd.maguro.cal \
+	$(DEVICE_FOLDER)/etc/wifi/bcmdhd.toro.cal:system/etc/wifi/bcmdhd.toro.cal \
+	$(DEVICE_FOLDER)/etc/wifi/bcmdhd.toroplus.cal:system/etc/wifi/bcmdhd.toroplus.cal
 
 PRODUCT_PACKAGES += \
 	libwpa_client \
@@ -103,9 +104,6 @@ PRODUCT_PACKAGES += \
 	dhcpcd.conf \
 	wpa_supplicant \
 	wpa_supplicant.conf
-
-PRODUCT_PROPERTY_OVERRIDES += \
-	wifi.interface=wlan0
 
 # NFC
 PRODUCT_PACKAGES += \
@@ -173,20 +171,6 @@ ADDITIONAL_BUILD_PROPERTIES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	sys.io.scheduler=bfq
 
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.opengles.version=131072 \
-	ro.sf.lcd_density=320 \
-	ro.hwui.disable_scissor_opt=true \
-	debug.hwui.render_dirty_regions=false
-
-# GPU producer to CPU consumer not supported
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.bq.gpu_to_cpu_unsupported=1
-
-# Newer camera API isn't supported.
-PRODUCT_PROPERTY_OVERRIDES += \
-	camera2.portability.force_api=1
-
 # Snap support
 PRODUCT_PACKAGES += \
 	Snap
@@ -194,13 +178,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	camera.qcom.misc.disable=1
 
+# Symlinks
+PRODUCT_PACKAGES += \
+	tuna_hdcp_keys
+
 # Themes
 PRODUCT_PACKAGES += \
     HexoLibre
-
-# Disable VFR support for encoders
-PRODUCT_PROPERTY_OVERRIDES += \
-	debug.vfr.enable=0
 
 PRODUCT_CHARACTERISTICS := nosdcard
 
@@ -219,6 +203,12 @@ PRODUCT_PACKAGES += \
 # DCC
 PRODUCT_PACKAGES += \
 	dumpdcc
+
+# cdma is for toro and toroplus, gsm is for maguro.
+# the ones not applicable to the device will be removed on first boot-up.
+PRODUCT_COPY_FILES += \
+	frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
+	frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
