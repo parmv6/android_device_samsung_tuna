@@ -49,7 +49,7 @@ PRODUCT_PACKAGES += \
 	audio.primary.tuna \
 	audio.r_submix.default \
 	audio.usb.default \
-	camera.tuna \
+	camera.omap4 \
         keystore.tuna \
 	lights.tuna \
 	nfc.tuna \
