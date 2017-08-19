@@ -115,6 +115,9 @@ BOARD_SEPOLICY_DIRS += \
 # Some of our vendor libs have text relocations
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 
+# Sensors
+USE_DEVICE_SPECIFIC_SENSORS := true
+
 # Recovery
 RECOVERY_FSTAB_VERSION := 2
 TARGET_RECOVERY_FSTAB = $(DEVICE_FOLDER)/rootdir/fstab.tuna
