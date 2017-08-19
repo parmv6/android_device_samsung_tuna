@@ -18,6 +18,10 @@ allow recovery property_socket:sock_file write;
 allow recovery init:unix_stream_socket connectto;
 allow recovery tee_fs_prop:property_service set;
 
+# For moving files in tunasetup
+allow recovery system_file:dir { add_name rename remove_name rmdir write unlink };
+allow recovery system_file:file { rename write unlink };
+
 # For creating or checking /tee
 allow recovery tee_block_device:blk_file { getattr open ioctl read write };
 allow recovery unlabeled:dir { add_name create getattr open read relabelfrom relabelto search setattr write };
@@ -40,3 +44,19 @@ allow recovery { efs_file radio_efs_file bluetooth_efs_file }:file { getattr ope
 
 # For rebooting in tunasetup
 allow recovery powerctl_prop:property_service set;
+
+# Additional rules for N
+allow recovery shell_exec:file getattr;
+allow recovery toolbox_exec:file { execute execute_no_trans getattr open read };
+allow recovery apk_data_file:dir { open read };
+allow recovery apk_private_data_file:dir { getattr open read };
+allow recovery asec_image_file:dir { getattr open read };
+allow recovery bluetooth_data_file:dir { getattr read };
+allow recovery bluetooth_data_file:lnk_file getattr;
+allow recovery dalvikcache_data_file:dir read;
+allow recovery rootfs:fifo_file { create open read };
+allow recovery rootfs:file { create write };
+allow recovery selinuxfs:file write;
+allow recovery shell_data_file:dir { getattr read };
+allow recovery system_data_file:dir { open read };
+allow recovery system_data_file:file open;
